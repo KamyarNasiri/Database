@@ -82,7 +82,6 @@ print("x = 20 -> remove playlist")
 print("x = 21 -> Search according to video name")
 print("x = 22 -> Search according to channel name")
 print("x = 23 -> Search according to playlist name")
-
 print("x = 0 -> exit()")
 
 x = int(input("Select between operations: "))
@@ -99,7 +98,6 @@ for d in range(len(out4)):
     print(out4[d])
 
 while (x):
-
     ######################################################## create channel
     if x == 2:
 
