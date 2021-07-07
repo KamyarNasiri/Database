@@ -22,6 +22,8 @@ conn = psycopg2.connect(user="postgres",
                         database="myDB")
 print("connect to database")
 
+
+############################################################################################################# for reply
 sql = """
  SELECT "comment_id","u_id","v_id"
     from public.comment
@@ -35,7 +37,7 @@ out6 = cursor.fetchall()
 conn.commit()
 print(out6)
 conn.close()
-
+###############################################################################################################
 
 conn = psycopg2.connect(user="postgres",
                         password="kiki",
@@ -44,11 +46,13 @@ conn = psycopg2.connect(user="postgres",
                         database="myDB")
 print("connect to database")
 
+
 for _ in range(1,19):
 
+    #######################################################################################################################  fake user
 
     # CREATE EXTENSION pgcrypto; use this just first one
-    # if flag == False:
+    if flag == False:
     # sql = """
     #
     #         INSERT INTO public."User" ("user_ID" ,username, email ,date_join,photo, password) VALUES
@@ -69,6 +73,12 @@ for _ in range(1,19):
     #     'image': psycopg2.Binary(image_data)
     #
     # }
+
+
+
+
+
+    ########################################################################################################################### fake channel
 
     #     sql = """
     #
@@ -93,13 +103,14 @@ for _ in range(1,19):
     #     'u_id': random.randint(1,19)
     # }
     #
-    #
-    #
-    #
     # cursor = conn.cursor()
     # cursor.execute(sql, data_insert)
     #
     # conn.commit()
+
+
+
+    ##############################################################################################################  fake video
 
     #     sql = """
     #
@@ -149,25 +160,26 @@ for _ in range(1,19):
     # }
 
 
-    sql = """
-                INSERT INTO public."playList" ("playlist_ID" ,playlist_name, acces ,"u_ID") VALUES
-                  (%(p_ID)s,%(name)s,%(acces)s,%(u_id)s);
-                """
-
-    Faker.seed(_)
-    data_insert = {
-        'p_ID': _+20,
-        'name': "watch later",
-        'acces':False,
-        'u_id': _
-
-    }
 
 
-
-
-
+    ######################################################################################################## fake playlist
+    # sql = """
+    #             INSERT INTO public."playList" ("playlist_ID" ,playlist_name, acces ,"u_ID") VALUES
+    #               (%(p_ID)s,%(name)s,%(acces)s,%(u_id)s);
+    #             """
     #
+    # Faker.seed(_)
+    # data_insert = {
+    #     'p_ID': _+20,
+    #     'name': "watch later",
+    #     'acces':False,
+    #     'u_id': _
+    #
+    # }
+
+
+    ################################################################################################### fake comment
+
     #     sql = """
     #
     #             INSERT INTO public.comment ("comment_id" ,text ,"u_id","v_id","like_video") VALUES
@@ -190,7 +202,7 @@ for _ in range(1,19):
 
 
 
-
+#################################################################################################### fake reply
 
     #     sql = """
     #
@@ -213,6 +225,9 @@ for _ in range(1,19):
     #     'v_id':out6[_][2]
     # }
 
+
+    ############################################################################################# fake join channel
+
     #     sql = """
     #
     #             INSERT INTO public.join_channel ("join_ID" , "u_id","c_id") VALUES
@@ -231,25 +246,26 @@ for _ in range(1,19):
     #     'c_ID':random.randint(1,19)
     # }
 
-    #     sql = """
-    #
-    #             INSERT INTO public.watch ("watch_id" , "u_id",watched,"v_id") VALUES
-    #            (%(w_ID)s,%(u_id)s,%(watched)s,%(v_ID)s);
-    #             """
-    # else:
-    #     sql = """
-    #                 INSERT INTO public.watch("watch_id" , "u_id",watched,"v_id") VALUES
-    #                 (%(w_ID)s,%(u_id)s,%(watched)s,%(v_ID)s);
-    #                 """
-    # flag = True
-    # Faker.seed(_)
-    # data_insert = {
-    #     'w_ID': _,
-    #     'u_id': random.randint(1,19),
-    #     'watched': fake.boolean(),
-    #     'v_ID':random.randint(1,19)
-    # }
-    #
+
+    ##################################################################################################### fake watch
+        sql = """
+
+                INSERT INTO public.watch ("watch_id" , "u_id",watched,"v_id") VALUES
+               (%(w_ID)s,%(u_id)s,%(watched)s,%(v_ID)s);
+                """
+    else:
+        sql = """
+                    INSERT INTO public.watch("watch_id" , "u_id",watched,"v_id") VALUES
+                    (%(w_ID)s,%(u_id)s,%(watched)s,%(v_ID)s);
+                    """
+    flag = True
+    Faker.seed(_)
+    data_insert = {
+        'w_ID': _,
+        'u_id': random.randint(1,19),
+        'watched': fake.boolean(),
+        'v_ID':random.randint(1,19)
+    }
 
     cursor = conn.cursor()
     cursor.execute(sql, data_insert)
