@@ -1,2 +1,3 @@
-# Database
-## The project of Database course in Ferdowsi university of Mashhad.
+# Youtube Database System
+## The project of Database course
+### Ferdowsi university of Mashhad
