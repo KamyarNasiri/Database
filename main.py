@@ -33,7 +33,33 @@ search_playlist = {}
 remove_playlist_dict = {}
 
 storage = 20
-user_id = int(input("Enter your user id: "))
+u = 1
+while u == 1:
+    user_id = int(input("Enter your user id: "))
+
+    his = """
+            SELECT COUNT("user_ID")
+             FROM public."User"
+              WHERE 
+                 "user_ID"=%(u_id)s;
+            """
+
+    his7 = {
+
+        'u_id': user_id
+    }
+
+    cursor = conn.cursor()
+    cursor.execute(his, his7)
+    hiss = cursor.fetchall()
+    conn.commit()
+    if hiss[0][0] == 0:
+        print("wrong user ID!")
+        print("Try again")
+        u = 1
+    else:
+        u = 0
+
 print("x = 2 -> Create Channel")
 print("x = 3 -> upload video into channel")
 print("x = 4 -> remove video from channel")
@@ -60,10 +86,24 @@ print("x = 23 -> Search according to playlist name")
 print("x = 0 -> exit()")
 
 x = int(input("Select between operations: "))
+other4 = """
+                 	SELECT distinct "video_ID", video_name
+                         from public.video
+
+                 """
+cursor = conn.cursor()
+cursor.execute(other4)
+out4 = cursor.fetchall()
+conn.commit()
+for d in range(len(out4)):
+    print(out4[d])
+
 while (x):
+
+    ######################################################## create channel
     if x == 2:
+
         print("Create Channel")
-        # print("please input channel_id, channel_name, date_create, description, user_id, photo_url: ")
         for i in range(4):
             while i == 0:
                 print("please enter channel_name: ")
@@ -99,8 +139,6 @@ while (x):
                 else:
                     create_channel_dict['photo_url'] = k
 
-        ################################### create channel
-
         other1 = """
         	SELECT MAX("channel_ID")  
                 from public.channel
@@ -130,17 +168,17 @@ while (x):
 
         cursor = conn.cursor()
         cursor.execute(sql1, s1)
-        # out=cursor.fetchall()
         conn.commit()
 
-        #####################################################
-
         x = int(input("Select between operations: "))
-    elif x == 3:
-        print("upload video into channel")
+        #########################################################################################
 
-        upload_video_dict['video_id'] = 'missed'
-        # print(" "video_ID", video_name, date_upload, description, duration, "c_ID", storage_id, thumbnail, p_id ")
+
+    #########################################################  upload video
+    elif x == 3:
+
+        print("upload video into the channel")
+
         for i in range(6):
             while i == 0:
                 print("please enter video_name: ")
@@ -195,22 +233,11 @@ while (x):
                     upload_video_dict['duration'] = k
                     break
 
-            # while i == 5:
-            #     print("please enter storage_id: ")
-            #     k = str(input())
-            #     if k == '#':
-            #         print("storage_id of video cannot be Null!")
-            #         i = 1
-            #     else:
-            #         upload_video_dict['storage_id'] = k
-            #         break
-
             if i == 5:
                 print("please enter playlist id: ")
                 k = str(input())
                 upload_video_dict['playlist_id'] = k
 
-        #########################  upload video
         other2 = """
         	SELECT "channel_ID"
                 from public.channel
@@ -263,28 +290,18 @@ while (x):
         # out=cursor.fetchall()
         conn.commit()
         storage += 1
-        ######################################
-
         x = int(input("Select between operations: "))
+
+        ####################################################################################################
+
+
+    ###########################################################  remove video
     elif x == 4:
+
         print("remove video from channel")
 
-        # remove_video_dict['channel_id'] = 'missed'
-        other4 = """
-            	SELECT distinct "video_ID", video_name
-                    from public.video
-
-            """
-        cursor = conn.cursor()
-        cursor.execute(other4)
-        out4 = cursor.fetchall()
-        conn.commit()
-        for d in range(len(out4)):
-            print(out4[d])
         k = int(input("enter video id  "))
         remove_video_dict['video id'] = k
-
-        ########################  remove video
 
         sd = """
                       DELETE FROM public.reply 
@@ -328,21 +345,20 @@ while (x):
         # out=cursor.fetchall()
         conn.commit()
 
-        #################################
-
         x = int(input("Select between operations: "))
 
-    elif x == 5:
-        print("watch video")
+        #######################################################################
 
-        watch_video_dict['watch_id'] = 'missed'
-        # print("please input watch_id, u_id, watched, v_id: ")
+
+    ###########################################################  watch video
+    elif x == 5:
+
+        print("watch video")
         print("Enter the video id: ")
         k = int(input())
         watch_video_dict['v_id'] = k
         watch_video_dict['watched'] = True
 
-        ############################  watch
         other4 = """
         	SELECT MAX("watch_id")  
                 from public.watch
@@ -373,14 +389,16 @@ while (x):
         cursor.execute(sql4, s4)
         # out=cursor.fetchall()
         conn.commit()
-        ##########################################
-
         x = int(input("Select between operations: "))
+
+        ##################################################################################
+
+
+    #########################################################   comment
     elif x == 6:
+
         print("Comment to video")
 
-        # comment_id, text, u_id, v_id, like_video
-        comment_vid['comment_id'] = 'missed'
         for i in range(3):
             while i == 0:
                 print("Please enter the video id: ")
@@ -406,7 +424,6 @@ while (x):
                     comment_vid['like_video'] = k
                     break
 
-        ################################   comment
         other5 = """
         	SELECT MAX("comment_id")  
                 from public.comment
@@ -436,14 +453,15 @@ while (x):
         cursor.execute(sql5, s5)
         # out=cursor.fetchall()
         conn.commit()
-
-        ################################################
-
         x = int(input("Select between operations: "))
 
+        ############################################################################
+
+
+    ########################################################### reply
     elif x == 7:
+
         print("replay to comment")
-        # reply_id, text, u_id, like_comment, "co_ID"
         for i in range(3):
             while i == 0:
                 print("Please enter the comment id: ")
@@ -468,8 +486,6 @@ while (x):
                 else:
                     reply['like_comment'] = k
                     break
-
-        ######################### reply
 
         other6 = """
         	SELECT MAX("reply_id")
@@ -514,21 +530,17 @@ while (x):
 
         cursor = conn.cursor()
         cursor.execute(sql6, s6)
-        # out=cursor.fetchall()
         conn.commit()
-
-        #################################
-
         x = int(input("Select between operations: "))
+        ###################################################################
+
+
+    ########################################################### remove comment
     elif x == 8:
         print("remove comment")
-
-        remove_comment["comment_id"] = 'missed'
         print("Please enter the video id: ")
         k = int(input())
         remove_comment['v_id'] = k
-
-        ######################## remove comment
 
         hello = """
         SELECT COUNT("comment_id")
@@ -602,16 +614,16 @@ while (x):
 
         cursor = conn.cursor()
         cursor.execute(sql7, s7)
-        # out=cursor.fetchall()
         conn.commit()
-        ######################################
-
         x = int(input("Select between operations: "))
-    elif x == 9:
-        print("Create Playlist")
-        # "playlist_ID", playlist_name, acces, "u_ID"
 
-        create_playlist['playlist_ID'] = 'missed'
+        #########################################################################
+
+
+    ###################################################### create play list
+    elif x == 9:
+
+        print("Create Playlist")
         for i in range(2):
             while i == 0:
                 print("Enter the name of playlist: ")
@@ -630,8 +642,6 @@ while (x):
                     create_playlist['acces'] = False
                 else:
                     create_playlist['acces'] = True
-
-        ########################## create play list
 
         other7 = """
         	SELECT MAX("playlist_ID")  
@@ -659,12 +669,12 @@ while (x):
 
         cursor = conn.cursor()
         cursor.execute(sql8, s8)
-        # out=cursor.fetchall()
         conn.commit()
-
-        ###################################################
-        ######################################## add video to playlist
         x = int(input("Select between operations: "))
+        ####################################################################
+
+
+    ###################################################### add video to playlist
     elif x == 10:
         print("Insert into Playlist")
 
@@ -712,13 +722,12 @@ while (x):
             cursor.execute(vid, v8)
             # out8 = cursor.fetchall()
             conn.commit()
+            x = int(input("Select between operations: "))
 
-        #############################################
+        ######################################################################
 
-        ############################## remove from play list
 
-        x = int(input("Select between operations: "))
-
+    ###################################################### remove from play list
     elif x == 11:
         print("remove from playlist")
 
@@ -767,9 +776,12 @@ while (x):
             cursor.execute(xx, xx8)
             # out8 = cursor.fetchall()
             conn.commit()
-
-        ################################################
         x = int(input("Select between operations: "))
+
+        #########################################################################
+
+
+    ##################################################### join channel
     elif x == 12:
         print("Join channel")
 
@@ -783,8 +795,6 @@ while (x):
             else:
                 join_channel['c_id'] = k
                 break
-
-        ###################################### join channel
 
         other10 = """
         	SELECT MAX("join_ID")  
@@ -814,11 +824,11 @@ while (x):
         cursor.execute(sql9, s9)
         # out=cursor.fetchall()
         conn.commit()
-
-        ##################################################
-
         x = int(input("Select between operations: "))
+        #######################################################################
 
+
+    ##################################################### remove of channel
     elif x == 13:
         print("Leave channel")
 
@@ -832,8 +842,6 @@ while (x):
             else:
                 Leave_channel['c_id'] = k
                 break
-
-        ################################ remove of channel
 
         sql10 = """
         DELETE FROM public.join_channel
@@ -852,19 +860,18 @@ while (x):
         cursor.execute(sql10, s10)
         # out=cursor.fetchall()
         conn.commit()
-
-        ########################################
-
         x = int(input("Select between operations: "))
 
+        ##########################################################
+
+
+    ###################################################  number of watch video
     elif x == 14:
         print("Number of watched")
 
         print("Please enter the video id: ")
         k = int(input())
         NumWatched_comment['v_id'] = k
-
-        ############################  number of watch video
 
         sql11 = """
         select COUNT ( v_id)
@@ -883,18 +890,17 @@ while (x):
         print("number of watch videos = ")
         print(out11[0][0])
 
-        ###########################################################
-
         x = int(input("Select between operations: "))
+        ###################################################################
 
+
+    #################################################### number of like/dislike
     elif x == 15:
         print("Number of likes/dislikes")
 
         print("Please enter the video id: ")
         k = int(input())
         NumLike_comment['v_id'] = k
-
-        ######################################### number of like
 
         sql12 = """
         select COUNT ( v_id)
@@ -911,9 +917,7 @@ while (x):
         conn.commit()
         print("number of likes = ")
         print(out12[0][0])
-        #####################################################
 
-        ######################################### number of dislike
         sql13 = """
         select COUNT ( v_id)
         from public.comment
@@ -930,19 +934,18 @@ while (x):
         conn.commit()
         print("number of dislikes = ")
         print(out13[0][0])
-
-        ##################################################
-
         x = int(input("Select between operations: "))
 
+        #################################################################
+
+
+    ####################################################### tedad comment
     elif x == 16:
         print("Number of comments")
 
         print("Please enter the video id: ")
         k = int(input())
         NumComment_comment['v_id'] = k
-
-        ########################################### tedad comment
 
         sql14 = """
         select COUNT( distinct "comment_id")
@@ -962,18 +965,17 @@ while (x):
         print("number of comments = ")
         print(out14[0][0])
 
-        #################################################
-
         x = int(input("Select between operations: "))
+        #################################################################
 
+
+    ####################################################### number of join channel
     elif x == 17:
         print("Number of joined users")
 
         print("Please enter the channel id: ")
         k = int(input())
         NumJoin['c_id'] = k
-
-        ########################### number of join channel
 
         sql15 = """
         select COUNT (distinct "join_ID")
@@ -993,18 +995,17 @@ while (x):
         print("number of join channel = ")
         print(out15[0][0])
 
-        ##################################################
-
         x = int(input("Select between operations: "))
+        ##############################################################
 
+
+    ###################################################### get reply of videos
     elif x == 18:
         print("get replies of a video (replies of its comments)")
 
         print("Please enter the video id: ")
         k = int(input())
         get_reply['v_id'] = k
-
-        #################################### get reply of videos
 
         sql16 = """
         SELECT  text
@@ -1023,13 +1024,12 @@ while (x):
         conn.commit()
         print("reply = ")
         print(out16[0][0])
-
-        #################################################
-
-        ##################################### remove video and channel
-
         x = int(input("Select between operations: "))
 
+        #####################################################################
+
+
+    ##################################################### remove video and channel
     elif x == 19:
         print("remove channel")
 
@@ -1083,11 +1083,12 @@ while (x):
 
         x = int(input("Select between operations: "))
 
-        ###############################################
+        ###############################################################
 
+
+    #################################################### remove play list
     elif x == 20:
         print("remove playlist")
-
         print("please enter playlist id: ")
         k = int(input())
         if k > 20 and k < 38:
@@ -1095,7 +1096,6 @@ while (x):
             exit()
 
         remove_playlist_dict['playlist_id'] = k
-        ##################################### remove play list
 
         hye = """
                 SELECT COUNT("playlist_ID")
@@ -1144,12 +1144,13 @@ while (x):
 
         cursor = conn.cursor()
         cursor.execute(ko, kiki)
-        # aout = cursor.fetchall()
         conn.commit()
         x = int(input("Select between operations: "))
-    ##########################################################
-    elif x == 21:
+        ##########################################################
 
+
+    ######################################################   search video name
+    elif x == 21:
         print("search video")
         print("please enter video name:")
         k = str(input())
@@ -1178,7 +1179,10 @@ while (x):
         print("storage id =")
         print(you[0][1])
         x = int(input("Select between operations: "))
-    ##########################################################
+        ##########################################################
+
+
+    ######################################################   search channel name
     elif x == 22:
 
         print("search channel")
@@ -1210,8 +1214,10 @@ while (x):
         print(me[0][0])
         x = int(input("Select between operations: "))
 
-        ##########################################
+        ######################################################################
 
+
+    ######################################################   search playlist name
     elif x == 23:
 
         print("search playlist")
@@ -1242,6 +1248,7 @@ while (x):
         print(" this channel exists and number of playlist with this name is :")
         print(he[0][0])
         x = int(input("Select between operations: "))
+        ################################################################################
 
 conn.commit()
 conn.close()
